@@ -1,8 +1,14 @@
+//  Succesfully Minted! Check out your TX here:
+//  https://explorer.solana.com/tx/7uqALHhWSq73wMZpw7XB78twuL27dBsBp3HcH4sKWZJviY6hjHyUn4tZS8dhp2LYfYwj7UsmE1vpmPW4VukW6hG?cluster=devnet
+//  Mint Address:  99tyHwT5y4mUS4TdeEE3jAF5fyfZ8AS6mvMYJtmWyBLG
+
+
+
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
 import { createSignerFromKeypair, signerIdentity, generateSigner, percentAmount } from "@metaplex-foundation/umi"
 import { createNft, mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 
-import wallet from "../turbin3-wallet.json"
+import wallet from "./wallet/turbin3-wallet.json"
 import base58 from "bs58";
 
 const RPC_ENDPOINT = "https://api.devnet.solana.com";
@@ -16,11 +22,19 @@ umi.use(mplTokenMetadata())
 const mint = generateSigner(umi);
 
 (async () => {
-    // let tx = ???
-    // let result = await tx.sendAndConfirm(umi);
-    // const signature = base58.encode(result.signature);
-    
-    // console.log(`Succesfully Minted! Check out your TX here:\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`)
+    let tx = createNft(
+        umi,
+        {mint,
+         name: "SnNick's Rug",
+         symbol: "ShNi",
+         uri: " https://gateway.irys.xyz/6EKz1gE7FSKGneGFsMhAcF3iZy9zPRc4vjttQH9pdrtd",
+         sellerFeeBasisPoints: percentAmount(5)
+        }
+
+    )
+     let result = await tx.sendAndConfirm(umi);
+     const signature = base58.encode(result.signature);
+     console.log(`Succesfully Minted! Check out your TX here:\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`)
 
     console.log("Mint Address: ", mint.publicKey);
 })();
